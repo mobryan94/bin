@@ -6,15 +6,15 @@ import * as pages from "@/pages";
 const routes = [
   {
     component: layouts.Default,
-    path: "/",
+    path: "/fake-binance",
     children: [
       {
-        path: "/",
+        path: "",
         name: "home",
         component: pages.home.Home,
       },
       {
-        path: "/order-book",
+        path: "order-book",
         name: "order-book",
         component: pages.orderBook.OrderBook,
       },
