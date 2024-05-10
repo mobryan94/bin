@@ -19,12 +19,13 @@ function setDepth(update, depthData, depthName) {
       }
 
       if (newElem[1]) {
-        if (mid === 0 && newElem[0] < +depthData[depthName][mid][0] + 10) {
-          // console.log("*", depthName, newElem[0], +depthData[depthName][mid][0]);
+        // const priceDiff = depthName === "bids" ? 10 : 5;
+        if (mid === 0 && newElem[0] < +depthData[depthName][mid][0]) {
+          // console.log("*", depthName, newElem[0], +depthData[depthName][mid][0] + priceDiff);
           depthData[depthName].unshift(newElem);
           break;
-        } else if (mid === depthData[depthName].length - 1 && newElem[0] > +depthData[depthName][mid][0] - 10) {
-          // console.log("**", depthName, newElem[0], +depthData[depthName][mid][0]);
+        } else if (mid === depthData[depthName].length - 1 && newElem[0] > +depthData[depthName][mid][0]) {
+          // console.log("**", depthName, newElem[0], +depthData[depthName][mid][0] - priceDiff);
           depthData[depthName].push(newElem);
           break;
         }
@@ -46,8 +47,10 @@ function setDepth(update, depthData, depthName) {
 
 function setQuantity(depthData, depthName) {
   depthData[depthName] = depthData[depthName].map((item, indx) => {
+    item[3] = +item[0] * +item[1];
+
     if (indx === 0) {
-      item[2] = +item[1] + 10;
+      item[2] = +item[1];
       return item;
     }
 

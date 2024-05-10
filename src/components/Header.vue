@@ -5,7 +5,7 @@
     </div>
 
     <div>
-      <v-btn color="amber-accent-2" variant="text" href="/order-book">Order Book</v-btn>
+      <v-btn variant="text" @click="goTo('orderbook')">Order Book</v-btn>
     </div>
   </header>
 </template>

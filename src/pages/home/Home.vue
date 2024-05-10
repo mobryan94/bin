@@ -12,21 +12,9 @@
       </v-col>
     </v-row>
 
-    <v-row class="mt-0" :class="isPhone ? 'flex-column-reverse' : ''">
+    <v-row class="mt-0">
       <v-col cols="12" sm="4" md="3" class="history-container">
-        <div class="d-flex justify-space-between">
-          <div>Валюта</div>
-          <div class="pr-5">Время</div>
-        </div>
-
-        <hr />
-
-        <div class="overflow-auto pr-2">
-          <div v-for="(hstr, hstrIndx) in historyList" :key="hstrIndx" class="history-item">
-            <div>{{ hstr.title }}</div>
-            <div>{{ hstr.timestamp }}</div>
-          </div>
-        </div>
+        <History :historyList="historyList" />
       </v-col>
 
       <v-col cols="12" sm="8">
@@ -35,7 +23,7 @@
         </div>
 
         <div v-else>
-          <depth-chart :data="data" :width="depthChartWidth" />
+          <depth-chart :data="depthSnapshot" :width="depthChartWidth" />
         </div>
       </v-col>
     </v-row>
@@ -43,21 +31,18 @@
 </template>
 
 <script>
-  import axios from "axios";
+  import { mapGetters } from "vuex";
+
   import DepthChart from "@/components/DepthChart.vue";
+  import History from "@/components/History.vue";
 
   export default {
     name: "OrderBook",
 
-    components: { DepthChart },
+    components: { DepthChart, History },
 
     data() {
       return {
-        data: {},
-
-        preloader: true,
-        currWs: null,
-
         currentSymbol: "BTCUSDT",
         symbolList: [
           { title: "BTC / USDT", value: "BTCUSDT" },
@@ -66,33 +51,23 @@
         ],
 
         historyList: [],
+
+        preloader: true,
       };
     },
 
     mounted() {
-      axios.get("https://api.binance.com/api/v3/depth?symbol=BTCUSDT&limit=1000").then((response) => {
-        this.data = response.data;
+      this.loadDepth();
+    },
 
-        const myWorker = new Worker(new URL("./depth.js", import.meta.url));
-        const depthDataCopy = JSON.parse(JSON.stringify(this.data));
-        const ws = new WebSocket("wss://stream.binance.com:9443/ws/btcusdt@depth");
-
-        ws.onmessage = (wsData) => {
-          const wsDataCopy = JSON.parse(JSON.stringify(wsData.data));
-
-          myWorker.postMessage([depthDataCopy, wsDataCopy]);
-          myWorker.onmessage = (e) => {
-            this.$nextTick(() => {
-              this.data = e.data;
-              this.preloader = false;
-            });
-          };
-        };
-      });
+    computed: {
+      ...mapGetters(["depthSnapshot"]),
     },
 
     methods: {
       setChangedSymbol() {
+        this.loadDepth();
+
         const date = new Date();
         const { title } = this.symbolList.find((smbl) => smbl.value === this.currentSymbol);
         const setZero = (date) => (date > 9 ? date : "0" + date);
@@ -102,6 +77,13 @@
         const timestamp = `${hour}:${min}:${second}`;
 
         this.historyList.unshift({ title, timestamp });
+      },
+      loadDepth() {
+        this.preloader = true;
+
+        this.$store.dispatch("getDepthSnapshot", this.currentSymbol).then(() => {
+          if (this.preloader) this.preloader = false;
+        });
       },
     },
   };

@@ -6,5 +6,5 @@ import * as modules from "./modules";
 export default createStore({
   modules,
   // strict: debug,
-  plugins: [createLogger()],
+  // plugins: [createLogger()],
 });

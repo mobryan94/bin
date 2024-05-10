@@ -1,83 +1,74 @@
 <template>
-  <v-container fluid>
-    <div>
-      <depth-chart :data="data" :options="options" :theme="theme" />
+  <div>
+    <div class="d-flex align-center">
+      <span class="mr-3">Записей в таблице: </span>
+      <v-select v-model="currentItems" :items="itemsPerPage" class="mt-4 symbols-container" density="compact"></v-select>
     </div>
 
-    <v-btn @click="stopWs">STOP</v-btn>
+    <v-row style="max-height: 80vh; overflow: auto">
+      <v-col>
+        <span> Bids </span>
+        <v-data-table
+          :headers="headers"
+          :items="$store.getters.depthSnapshot.bids"
+          :items-per-page="currentItems"
+          :items-per-page-options="itemsPerPage"
+          items-per-page-text=""
+          hide-default-footer
+          no-data-text="Loading..."
+        ></v-data-table>
+      </v-col>
 
-    <!-- <OrderInfo ref="orderInfo" @saveChanges="refreshAbonementOrders" /> -->
-  </v-container>
+      <v-col>
+        <span> Asks </span>
+        <v-data-table
+          :headers="headers"
+          :items="$store.getters.depthSnapshot.asks"
+          :items-per-page="currentItems"
+          :items-per-page-options="itemsPerPage"
+          items-per-page-text=""
+          hide-default-footer
+          no-data-text="Loading..."
+        ></v-data-table>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
-  import DepthChart from "@/components/DepthChart.vue";
-
-  import axios from "axios";
-
   export default {
     name: "OrderBook",
 
-    components: { DepthChart },
-
     data() {
       return {
-        options: {
-          width: 780,
-          height: 540,
-          tipType: "axis",
-        },
+        currentItems: 10,
 
-        theme: "day",
-
-        data: {},
-
-        currWs: null,
+        itemsPerPage: [
+          { value: 10, title: "10" },
+          { value: 100, title: "100" },
+          { value: 1000, title: "1000" },
+        ],
       };
     },
 
-    mounted() {
-      axios.get("https://api.binance.com/api/v3/depth?symbol=BTCUSDT&limit=1000").then((response) => {
-        console.log(response.data);
-        this.data = response.data;
+    mounted() {},
 
-        this.data.asks = this.data.asks.map((ask, indx) => {
-          if (indx === 0) {
-            ask[1] = +ask[1];
-            return ask;
-          }
+    computed: {
+      headers() {
+        let headerList = [
+          { title: "Price", key: "0" },
+          { title: "Total", key: "3" },
+        ];
 
-          ask[1] = +ask[1] + +this.data.asks[indx - 1][1];
+        if (!this.isPhone) {
+          headerList.splice(1, 0, { title: "Quantity", key: "1" });
+        }
 
-          return ask;
-        });
-
-        this.data.bids = this.data.bids.map((bid, indx) => {
-          if (indx === 0) {
-            bid[1] = +bid[1];
-            return bid;
-          }
-
-          bid[1] = +bid[1] + +this.data.bids[indx - 1][1];
-
-          return bid;
-        });
-
-        this.data.asks = this.data.asks.reverse();
-      });
-
-      // this.currWs = new WebSocket("wss://stream.binance.com:9443/ws/btcusdt@depth");
-
-      // this.currWs.onmessage = (event) => {
-      //   console.log(event.data);
-      // };
-    },
-
-    methods: {
-      stopWs() {
-        this.currWs.close();
+        return headerList;
       },
     },
+
+    methods: {},
   };
 </script>
 

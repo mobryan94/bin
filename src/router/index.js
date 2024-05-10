@@ -6,7 +6,7 @@ import * as pages from "@/pages";
 const routes = [
   {
     component: layouts.Default,
-    path: "/fake-binance",
+    path: "/fake-binance/:page?",
     children: [
       {
         path: "",
@@ -14,8 +14,8 @@ const routes = [
         component: pages.home.Home,
       },
       {
-        path: "order-book",
-        name: "order-book",
+        path: "orderbook",
+        name: "orderbook",
         component: pages.orderBook.OrderBook,
       },
     ],

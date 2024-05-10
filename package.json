@@ -8,23 +8,18 @@
     "preview": "vite preview --port 8080"
   },
   "dependencies": {
-    "@types/qs": "^6.9.15",
     "axios": "^1.6.8",
-    "qs": "^6.12.1",
-    "v-depth-chart": "^0.1.5",
-    "vue": "^3.4.26",
-    "vue-depth-chart": "^0.2.7",
+    "vue": "^3.4.27",
     "vue-loader": "^17.4.2",
     "vue-router": "^4.3.2",
-    "vue-the-mask": "^0.11.1",
-    "vuetify": "^3.6.3",
+    "vuetify": "^3.6.4",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@vitejs/plugin-vue": "^5.0.4",
-    "@vue/compiler-sfc": "^3.4.26",
+    "@vue/compiler-sfc": "^3.4.27",
     "vite": "^5.2.11",
     "vite-plugin-env-compatible": "^2.0.1",
     "vite-plugin-html": "3.2.2"
