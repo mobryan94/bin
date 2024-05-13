@@ -18,7 +18,7 @@
       </v-col>
 
       <v-col cols="12" sm="8">
-        <div v-if="preloader" class="d-flex align-center justify-center h-100" style="background-color: #093e1f">
+        <div v-if="preloader" class="d-flex align-center justify-center h-100 bg-color">
           <v-progress-circular indeterminate :size="48"></v-progress-circular>
         </div>
 
@@ -82,7 +82,10 @@
         this.preloader = true;
 
         this.$store.dispatch("getDepthSnapshot", this.currentSymbol).then(() => {
-          if (this.preloader) this.preloader = false;
+          if (this.preloader)
+            setTimeout(() => {
+              this.preloader = false;
+            }, 2000);
         });
       },
     },

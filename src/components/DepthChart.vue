@@ -1,7 +1,7 @@
 <template>
   <div class="deepth-chart">
     <div class="deepth-chart-layout" :style="{ height: fHeight + 24 + 'px' }">
-      <canvas class="chart" ref="chart" :width="fWidth" :height="fHeight" :style="{ backgroundColor: bgColor }"></canvas>
+      <canvas class="chart bg-color" ref="chart" :width="fWidth" :height="fHeight"></canvas>
       <canvas class="chart-mask" ref="chartMask" :width="fWidth" :height="fHeight" @mousemove="onMouseMove" @mouseout="onMouseOut"></canvas>
       <canvas class="chart-x" ref="chartX" :width="fWidth" :height="24" :style="{ top: fHeight + 'px', left: 0 }"></canvas>
       <canvas class="chart-y" ref="chartY" :width="48" :height="fHeight" :style="{ top: 0, left: fWidth + 'px' }"></canvas>
@@ -47,10 +47,6 @@
       height: {
         type: String,
         default: "300px",
-      },
-      bgColor: {
-        type: String,
-        default: "#093E1F",
       },
       buyFillColor: {
         type: String,

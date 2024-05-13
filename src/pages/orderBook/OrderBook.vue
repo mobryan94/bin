@@ -51,8 +51,6 @@
       };
     },
 
-    mounted() {},
-
     computed: {
       headers() {
         let headerList = [
@@ -67,8 +65,6 @@
         return headerList;
       },
     },
-
-    methods: {},
   };
 </script>
 

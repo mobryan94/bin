@@ -15,7 +15,7 @@ const actions = {
     const response = await axios.get(`https://api.binance.com/api/v3/depth?symbol=${symbol}&limit=1000`);
     commit("setDepthSnapshot", response.data);
 
-    const myWorker = new Worker(new URL("@/worker/depth.js", import.meta.url));
+    const updateDepthData = new Worker(new URL("@/worker/depth.js", import.meta.url));
     const depthDataCopy = JSON.parse(JSON.stringify(response.data));
 
     dispatch("getWs", symbol.toLocaleLowerCase());
@@ -31,9 +31,9 @@ const actions = {
         firstGet = false;
         lastUpdate = wsDataCopy;
 
-        myWorker.postMessage([depthDataCopy, wsDataCopy]);
-        myWorker.onmessage = (e) => {
-          return commit("setDepthSnapshot", e.data);
+        updateDepthData.postMessage([depthDataCopy, wsDataCopy]);
+        updateDepthData.onmessage = (result) => {
+          return commit("setDepthSnapshot", result.data);
         };
       }
     };
